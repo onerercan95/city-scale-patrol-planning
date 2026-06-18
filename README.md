@@ -71,3 +71,6 @@ artifacts/<run>/
 ```bash
 pytest
 ```
+
+## Zenodo
+[![DOI](https://zenodo.org/badge/1273650915.svg)](https://doi.org/10.5281/zenodo.20752224)
