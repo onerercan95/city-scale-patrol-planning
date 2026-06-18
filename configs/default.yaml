@@ -1,0 +1,2 @@
+# Change this value to select the configuration used when --config is omitted.
+config: "la_central_poisson.yaml"

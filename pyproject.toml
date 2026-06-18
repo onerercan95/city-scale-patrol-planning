@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "city-scale-patrol-planning"
+version = "0.2.0"
+description = "Modular offline city-scale patrol planning from historical crime data"
+requires-python = ">=3.9"
+dependencies = [
+    "pandas>=2.0",
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+    "typer>=0.9",
+    "folium>=0.14",
+    "matplotlib>=3.8",
+    "numpy>=1.24",
+    "ortools>=9.9",
+    "seaborn>=0.13",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+optimization = ["networkx>=3.2"]
+
+[project.scripts]
+patrol = "patrol_planning.cli.app:app"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

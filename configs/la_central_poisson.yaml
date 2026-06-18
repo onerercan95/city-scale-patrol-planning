@@ -1,0 +1,54 @@
+run_name: "la-central-poisson-seed-42"
+
+data:
+  csv_path: "data/LA_Crime_Data_from_2020_to_2024.csv"
+  area_name: "Central"
+  history_start: "2022-01-01"
+  history_end: "2023-01-01"
+  chunk_size: 100000
+
+grid:
+  rows: 20
+  columns: 20
+
+time:
+  period_minutes: 30
+  shifts_per_day: 3
+
+scenario:
+  mode: "poisson"
+  replay_date: "2023-01-01"
+  officers: 60
+  random_seed: 42
+  poisson_rate_scale: 1.0
+
+vfop:
+  baseline: 0.05
+
+travel:
+  periods_per_grid_step: 1
+
+minp:
+  max_labels: 8000
+
+maxp:
+  cost_scale: 10000
+
+comparison:
+  seeds: [40, 41, 42, 43, 44]
+  officer_counts: [20, 30, 40]
+
+final_evaluation:
+  seeds: [40, 41, 42, 43, 44, 45, 46, 47, 48, 49]
+  officer_counts: [10, 12, 14, 16, 18, 20, 25, 30, 40]
+  grids:
+    - rows: 10
+      columns: 10
+    - rows: 12
+      columns: 12
+    - rows: 15
+      columns: 15
+  non_primary_seed_limit: 5
+
+output:
+  directory: "artifacts/la_central_poisson"
