@@ -66,6 +66,9 @@ artifacts/<run>/
 └── html/    Interactive patrol maps
 ```
 
+The `images/` folder includes the run summary, PVR stage comparison, officer
+allocation, incident coverage, grafting evaluation, and VFoP heatmaps.
+
 ## Tests
 
 ```bash

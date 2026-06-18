@@ -1,4 +1,5 @@
 from pathlib import Path
+from time import perf_counter
 from typing import Optional
 
 import typer
@@ -37,6 +38,7 @@ from patrol_planning.visualization.combined_map import build_combined_map
 from patrol_planning.visualization.final_map import build_final_map
 from patrol_planning.visualization.maxp_map import build_maxp_map
 from patrol_planning.visualization.minp_map import build_minp_map
+from patrol_planning.visualization.run_metrics import build_run_metric_images
 from patrol_planning.visualization.coverage_explanation import (
     build_coverage_explanation_plot,
 )
@@ -358,26 +360,32 @@ def run_grafting(
     )
     export_poisson_rates(build_result.poisson_rates, config.output.directory)
 
+    minp_started = perf_counter()
     minp_result = solve_minp(scenario, max_labels=config.minp.max_labels)
+    minp_seconds = perf_counter() - minp_started
     minp_report = validate_minp_result(scenario, minp_result)
     export_minp_result(minp_result, minp_report, config.output.directory)
     if not minp_report.valid or not minp_result.feasible:
         typer.echo("Grafting requires a valid, feasible MinP result.", err=True)
         raise typer.Exit(code=1)
 
+    maxp_started = perf_counter()
     maxp_result = solve_maxp(
         scenario,
         minp_result,
         cost_scale=config.maxp.cost_scale,
         random_seed=config.scenario.random_seed,
     )
+    maxp_seconds = perf_counter() - maxp_started
     maxp_report = validate_maxp_result(scenario, minp_result, maxp_result)
     export_maxp_result(maxp_result, maxp_report, config.output.directory)
     if not maxp_report.valid:
         typer.echo("Grafting requires a valid MaxP result.", err=True)
         raise typer.Exit(code=1)
 
+    grafting_started = perf_counter()
     grafting_result = solve_grafting(scenario, minp_result, maxp_result)
+    grafting_seconds = perf_counter() - grafting_started
     grafting_report = validate_grafting_result(
         scenario,
         minp_result,
@@ -417,6 +425,20 @@ def run_grafting(
         html_directory(config.output.directory) / "final_grafted_routes_map.html",
     )
     _export_vfop_summary(scenario, config.output.directory)
+    build_run_metric_images(
+        scenario,
+        minp_result,
+        maxp_result,
+        grafting_result,
+        minp_report,
+        grafting_report,
+        {
+            "minp": minp_seconds,
+            "maxp": maxp_seconds,
+            "grafting": grafting_seconds,
+        },
+        image_directory(config.output.directory),
+    )
 
     typer.echo(f"Scenario: {scenario.name}")
     typer.echo(f"MinP officers: {minp_result.selected_officer_count:,}")

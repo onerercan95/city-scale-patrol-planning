@@ -3,6 +3,7 @@ from patrol_planning.visualization.final_map import build_final_map
 from patrol_planning.visualization.map import build_scenario_map
 from patrol_planning.visualization.maxp_map import build_maxp_map
 from patrol_planning.visualization.minp_map import build_minp_map
+from patrol_planning.visualization.run_metrics import build_run_metric_images
 
 __all__ = [
     "build_combined_map",
@@ -10,4 +11,5 @@ __all__ = [
     "build_minp_map",
     "build_scenario_map",
     "build_maxp_map",
+    "build_run_metric_images",
 ]
